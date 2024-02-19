@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 
 
-class SpaceFind(ABC):
+class CommandExecutor(ABC):
+
     @abstractmethod
-    def find_space(self, board):
+    def execute(self):
         pass

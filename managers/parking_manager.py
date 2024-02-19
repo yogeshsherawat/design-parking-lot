@@ -1,5 +1,4 @@
 from db.parking_lot_dao import ParkingLotDao
-from exceptions import CarAlreadyPresentInParking
 
 
 class ParkingManager(object):
@@ -7,10 +6,26 @@ class ParkingManager(object):
     def __init__(self, space_finding_strategy):
         self.space_finding_strategy = space_finding_strategy
 
-    def park_car(self, registration_number):
-        parking_space_sequence_number = ParkingLotDao.get_parking_space_by_registration_number(registration_number)
-        if parking_space_sequence_number:
-            raise CarAlreadyPresentInParking()
-        parking_space_sequence_number = self.space_finding_strategy.find_space()
-        ParkingLotDao.mark_parking_space(parking_space_sequence_number, registration_number)
-        return parking_space_sequence_number
+    def create_parking_lot(self, number_of_slots):
+        ParkingLotDao.create_parking_lot(number_of_slots)
+
+    def park_car(self, car):
+        slot_number = self.space_finding_strategy.find_space()
+        ParkingLotDao.mark_slot_used(car, slot_number)
+        return slot_number
+
+    def leave_slot(self, slot_number):
+        ParkingLotDao.mark_slot_empty(slot_number)
+
+    def get_parking_lot_status(self):
+        n_slots = ParkingLotDao.get_n_slots()
+        status = []
+        for i in range(1, n_slots+1):
+            if not ParkingLotDao.is_slot_empty(i):
+                status.append((i, ParkingLotDao.get_car_in_slot(i)))
+        return status
+
+
+"""
+open to extension, closed to modification
+"""

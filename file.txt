@@ -1,0 +1,10 @@
+create_parking_lot 10
+status
+park KA-01-HH-1234 White
+status
+park KA-01-HH-9999 White
+status
+leave 1
+status
+park KA-01-HH-1234 Red
+status
